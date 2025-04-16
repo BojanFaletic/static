@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM Benchmark Comparison</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            color: #212529;
+            line-height: 1.6;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #343a40;
+        }
+
+        .table-container {
+            overflow-x: auto; /* Enables horizontal scrolling for the table on small screens */
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1200px; /* Minimum width before scrolling starts */
+        }
+
+        caption {
+            caption-side: bottom;
+            text-align: left;
+            font-size: 0.9em;
+            color: #6c757d;
+            margin-top: 15px;
+            padding: 0 10px;
+        }
+
+        th, td {
+            border: 1px solid #dee2e6;
+            padding: 12px 15px;
+            text-align: center;
+            vertical-align: middle; /* Ensures content is centered vertically */
+            font-size: 0.95em;
+        }
+
+        thead th {
+            background-color: #495057;
+            color: #ffffff;
+            position: sticky; /* Makes header sticky */
+            top: 0; /* Sticks to the top */
+            z-index: 1; /* Ensures header stays above scrolling content */
+            white-space: nowrap; /* Prevents header text wrapping */
+        }
+
+        /* First column header slightly wider and left-aligned */
+        thead th:first-child {
+            text-align: left;
+            min-width: 250px; /* Give more space for benchmark names */
+            position: sticky; /* Also make the first column header sticky */
+            left: 0; /* Stick to the left */
+            background-color: #495057; /* Ensure background consistency */
+            z-index: 2; /* Above other headers */
+        }
+
+        tbody th {
+            text-align: left;
+            font-weight: bold;
+            background-color: #f1f3f5;
+            position: sticky; /* Make row headers sticky */
+            left: 0; /* Stick to the left */
+            z-index: 0; /* Below header intersection */
+             white-space: normal; /* Allow benchmark names to wrap if needed */
+        }
+
+        /* Style category rows differently */
+        tbody tr.category-row th {
+           background-color: #e9ecef;
+           font-size: 1.05em;
+           /* Make category rows span if desired, but simpler to just style */
+        }
+         tbody tr.category-row td {
+            background-color: #e9ecef; /* Match category header background */
+        }
+
+
+        tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+         tbody tr:nth-child(even) th { /* Ensure sticky row header matches row color */
+             background-color: #f1f3f5; /* Keep row headers consistent or match row */
+         }
+
+
+        tbody tr:hover {
+            background-color: #e2e6ea;
+        }
+        tbody tr:hover th { /* Highlight sticky row header on hover */
+             background-color: #dbe1e6; /* Slightly darker hover for row header */
+         }
+
+
+        /* Style missing data */
+        td:empty::before {
+            content: "—"; /* Use CSS to add dash for completely empty cells */
+            color: #adb5bd;
+        }
+         td:contains("—") { /* Style cells explicitly containing the dash */
+             color: #adb5bd;
+         }
+
+         strong { /* Highlight best scores or specific notes */
+            font-weight: 600;
+            /* color: #007bff; */ /* Optional: Color for highlighted scores */
+         }
+
+    </style>
+</head>
+<body>
+
+    <h1>LLM Benchmark Comparison</h1>
+
+    <div class="table-container">
+        <table>
+            <caption>Consolidated Benchmark Performance Table. Scores represent accuracy (%) unless otherwise noted. '—' indicates data not available. Model names (o1, o3, o4 etc.) refer to OpenAI models/variants. Gemini 2.5 Pro shown for comparison.</caption>
+            <thead>
+                <tr>
+                    <th>Benchmark / Task / Metric</th>
+                    <th>Gemini 2.5 Pro</th>
+                    <th>o1</th>
+                    <th>o1-high</th>
+                    <th>o3</th>
+                    <th>o3 (no tools)</th>
+                    <th>o3 (with terminal)</th>
+                    <th>o3 (python + browsing*)</th>
+                    <th>o3-mini</th>
+                    <th>o3-mini-high</th>
+                    <th>o4-mini</th>
+                    <th>o4-mini (no tools)</th>
+                    <th>o4-mini (with terminal)</th>
+                    <th>o4-mini (with python + browsing...)</th>
+                    <th>o4-mini-high</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="category-row">
+                    <th scope="row"><strong>Reasoning & Knowledge</strong></th>
+                    <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                </tr>
+                <tr>
+                    <th scope="row">Humanity's Last Exam (no tools)</th>
+                    <td><strong>18.8%</strong></td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>20.32%</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>13.4%</td>
+                    <td>14.0%*</td>
+                    <td>—</td>
+                    <td>14.28%</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <th scope="row">Humanity's Last Exam (python + browsing*)</th>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td><strong>24.9%</strong></td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <th scope="row">Humanity's Last Exam (with python + browsing)</th>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td><strong>17.7%</strong></td>
+                    <td>—</td>
+                </tr>
+                 <tr class="category-row">
+                    <th scope="row"><strong>Science</strong></th>
+                    <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                 </tr>
+                <tr>
+                    <th scope="row">GPQA diamond (single attempt pass@1)</th>
+                    <td><strong>84.0%</strong></td>
+                    <td>78.0%</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>83.3%</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>77.0%</td>
+                    <td>79.7%</td>
+                    <td>—</td>
+                    <td>81.4%</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <th scope="row">GPQA diamond (multiple attempts)</th>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                </tr>
+                 <tr class="category-row">
+                    <th scope="row"><strong>Mathematics</strong></th>
+                     <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                 </tr>
+                <tr>
+                    <th scope="row">AIME 2025 (single attempt pass@1)</th>
+                    <td>86.7%</td>
+                    <td>79.2%</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>88.9%</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>86.5%</td>
+                    <td><strong>86.5%</strong></td>
+                    <td>—</td>
+                    <td>92.7%</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <th scope="row">AIME 2025 (multiple attempts)</th>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <th scope="row">AIME 2024 (single attempt pass@1)</th>
+                    <td>92.0%</td>
+                    <td>74.3%</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>91.6%</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>87.3%</td>
+                    <td><strong>87.3%</strong></td>
+                    <td>—</td>
+                    <td>93.4%</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <th scope="row">AIME 2024 (multiple attempts)</th>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                </tr>
+                 <tr class="category-row">
+                    <th scope="row"><strong>Code Generation & Editing</strong></th>
+                     <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                 </tr>
+                <tr>
+                    <th scope="row">Live Codebench v5 (single attempt pass@1)</th>
+                    <td>70.4%</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td><strong>74.1%</strong></td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                </tr>
+                 <tr>
+                    <th scope="row">Live Codebench v5 (multiple attempts)</th>
+                     <td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>
+                 </tr>
+                <tr>
+                    <th scope="row">Aider Polyglot (whole)</th>
+                    <td><strong>74.0%</strong></td>
+                    <td>—</td>
+                    <td>64.4%</td>
+                    <td>81.3%</td> <!-- Combined o3 and o3-high -->
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>66.7%</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>69.9%</td>
+                </tr>
+                <tr>
+                    <th scope="row">Aider Polyglot (diff)</th>
+                    <td><strong>68.6%</strong></td>
+                    <td>—</td>
+                    <td>61.7%</td>
+                     <td>79.6%</td> <!-- Combined o3 and o3-high -->
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>60.4%</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>58.2%</td>
+                </tr>
+                 <tr>
+                     <th scope="row">SWE-bench verified (Agentic coding)</th>
+                     <td>63.8%</td>
+                     <td>48.9%</td>
+                     <td>—</td>
+                     <td><strong>69.1%</strong></td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>49.3%</td>
+                     <td>49.3%</td>
+                     <td>68.1%</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>—</td>
+                 </tr>
+                  <tr>
+                     <th scope="row">SWE-Lancer: IC SWE Diamond (Dollars earned)</th>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>$28,500</td>
+                     <td><strong>$65,250</strong></td> <!-- o3-high value -->
+                     <td>—</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>$17,375</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>$56,375</td>
+                 </tr>
+                 <tr>
+                     <th scope="row">Codeforces Competition Code (ELO)</th>
+                     <td>—</td>
+                     <td>1891</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>2706</td>
+                     <td>—</td>
+                     <td>2073</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td><strong>2719</strong></td>
+                     <td>—</td>
+                     <td>—</td>
+                 </tr>
+                 <tr class="category-row">
+                    <th scope="row"><strong>Agentic Tasks</strong></th>
+                     <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                 </tr>
+                 <tr>
+                     <th scope="row">Tau-bench Function Calling (Airline Acc %)</th>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>50.0%</td>
+                     <td><strong>52.0%</strong></td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>32.4%</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>49.2%</td>
+                 </tr>
+                 <tr>
+                     <th scope="row">Tau-bench Function Calling (Retail Acc %)</th>
+                     <td>—</td>
+                     <td>—</td>
+                     <td><strong>70.8%</strong></td>
+                     <td>70.4%</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>57.6%</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>65.6%</td>
+                 </tr>
+                 <tr>
+                     <th scope="row">Scale MultiChallenge (Multi-turn instruction following %)</th>
+                     <td>—</td>
+                     <td>44.93%</td>
+                     <td>—</td>
+                     <td><strong>56.51%</strong></td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>39.89%</td>
+                     <td>—</td>
+                     <td>42.99%</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>—</td>
+                 </tr>
+                 <tr>
+                     <th scope="row">BrowseComp Agentic Browsing (o3 w/ python+browsing*)</th>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td><strong>49.7%</strong></td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>—</td>
+                 </tr>
+                 <tr>
+                     <th scope="row">BrowseComp Agentic Browsing (o4-mini w/ python+browsing...)</th>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td>—</td>
+                     <td><strong>28.3%</strong></td>
+                     <td>—</td>
+                 </tr>
+                <tr class="category-row">
+                    <th scope="row"><strong>Factuality</strong></th>
+                    <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                </tr>
+                <tr>
+                    <th scope="row">SimpleQA (Accuracy %)</th>
+                    <td><strong>52.9%</strong></td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>13.8%</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                </tr>
+                <tr class="category-row">
+                    <th scope="row"><strong>Visual Reasoning & Understanding</strong></th>
+                     <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                </tr>
+                <tr>
+                    <th scope="row">MMMU (Visual reasoning pass@1)</th>
+                    <td>81.7%</td>
+                    <td>77.6%</td>
+                    <td>no MM</td>
+                    <td><strong>82.9%</strong></td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>no MM</td>
+                    <td>no MM</td>
+                    <td>81.6%</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>no MM</td>
+                </tr>
+                 <tr>
+                    <th scope="row">MMMU (Visual reasoning multiple attempts)</th>
+                     <td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>
+                 </tr>
+                 <tr>
+                    <th scope="row">MathVista (Visual Math Reasoning Acc %)</th>
+                    <td>—</td>
+                    <td>71.8%</td>
+                    <td>—</td>
+                    <td><strong>87.5%</strong></td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>84.3%</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                </tr>
+                 <tr>
+                    <th scope="row">CharXiv-Reasoning (Sci. Fig. Reasoning Acc %)</th>
+                    <td>—</td>
+                    <td>55.1%</td>
+                    <td>—</td>
+                    <td><strong>75.4%</strong></td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>72.0%</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                 </tr>
+                 <tr>
+                    <th scope="row">Vibe-Eval (Reka) (Image understanding Acc %)</th>
+                    <td><strong>69.4%</strong></td>
+                    <td>—</td>
+                    <td>no MM</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>no MM</td>
+                    <td>no MM</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>no MM</td>
+                 </tr>
+                 <tr class="category-row">
+                     <th scope="row"><strong>Long Context</strong></th>
+                      <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                 </tr>
+                 <tr>
+                    <th scope="row">MRCR 128k (average)</th>
+                    <td><strong>94.5%</strong></td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>61.4%</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                 </tr>
+                 <tr>
+                    <th scope="row">MRCR 1M (pointwise)</th>
+                    <td><strong>83.1%</strong></td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                 </tr>
+                <tr class="category-row">
+                    <th scope="row"><strong>Multilingual Performance</strong></th>
+                     <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                </tr>
+                <tr>
+                    <th scope="row">Global MMU (Lite) (Accuracy %)</th>
+                    <td><strong>89.8%</strong></td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Simple script to handle placeholder content for empty TD cells if needed,
+        // although CSS :empty::before handles this visually.
+        // Also handles potential merging or specific styling via JS if required.
+        document.addEventListener('DOMContentLoaded', function() {
+            const cells = document.querySelectorAll('td');
+            cells.forEach(cell => {
+                if (cell.textContent.trim() === '—') {
+                    cell.style.color = '#adb5bd'; // Ensure styling consistency via JS too
+                }
+                 // Add specific classes or styles based on content if needed
+                 // Example: Highlight best scores (requires logic to determine best)
+                 /*
+                 if (cell.textContent.includes('%')) {
+                    // Add logic here to find and style the best score in a row
+                 }
+                 */
+            });
+
+            // Add class to empty category row cells for consistent background styling
+             const categoryRows = document.querySelectorAll('tr.category-row');
+             categoryRows.forEach(row => {
+                 const cells = row.querySelectorAll('td');
+                 cells.forEach(cell => {
+                    if (!cell.textContent.trim()) {
+                         cell.style.backgroundColor = '#e9ecef'; // Ensure empty cells match header
+                     }
+                 });
+             });
+        });
+    </script>
+
+</body>
+</html>
